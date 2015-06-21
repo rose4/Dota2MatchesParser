@@ -1,6 +1,6 @@
 <?php
 
-namespace Parser;
+namespace Gurzhii\Parser;
 
 class Team {
     public $percent;

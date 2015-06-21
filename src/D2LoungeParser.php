@@ -1,6 +1,6 @@
 <?php
 
-namespace Parser;
+namespace Gurzhii\Parser;
 
 class D2LoungeParser extends BaseParser implements ParserInterface {
 

@@ -1,7 +1,6 @@
 <?php
 
-namespace Parser;
-
+namespace Gurzhii\Parser;
 
 class Event {
     public $title;

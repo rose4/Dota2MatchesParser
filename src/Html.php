@@ -1,6 +1,6 @@
 <?php
 
-namespace Parser;
+namespace Gurzhii\Parser;
 
 class Html {
     public static function get($url, $use_include_path = false, $context=null, $offset = -1, $maxLen=-1, $lowercase = true, $forceTagsClosed=true, $target_charset = DEFAULT_TARGET_CHARSET, $stripRN=true, $defaultBRText=DEFAULT_BR_TEXT, $defaultSpanText=DEFAULT_SPAN_TEXT)

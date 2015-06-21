@@ -1,6 +1,6 @@
 <?php
 
-namespace Parser;
+namespace Gurzhii\Parser;
 
 interface ParserInterface{
     public function getStructuredDataSet();
