@@ -1,4 +1,9 @@
 {
+  "name": "Gruzhii/Parser",
+  "description": "dota 2 professional games parser",
+  "keywords": ["dota", "dota2", "parser"],
+  "license": "MIT",
+  "type": "project",
   "autoload": {
     "psr-4": {
       "Gurzhii\\Parser\\": "src/"
