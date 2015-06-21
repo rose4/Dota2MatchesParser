@@ -8,7 +8,6 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
 
     public function getStructuredDataSet()
     {
-        $matches = [];
         $matchList = isset($this->html->find('#bets')[0]) ? $this->html->find('#bets')[0] : null;
         if($matchList)
         {
@@ -36,12 +35,12 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
                         $this->getOriginalId($absolute_url),
                         $this->getStartTimeStamp($matchEl, $absolute_url)
                     );
-                    $matches[] = $match;
+                    $this->matches[] = $match;
                 }
 
             }
         }
-        return $matches;
+        return $this->matches;
     }
 
     private function getStartTimeStamp($matchEl, $match_absolute_url = '')

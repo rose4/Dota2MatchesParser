@@ -5,6 +5,7 @@ namespace Gurzhii\Parser;
 class BaseParser {
 
     public $html;
+    public $matches;
     public function __construct()
     {
         $html = Html::get(static::$url);
