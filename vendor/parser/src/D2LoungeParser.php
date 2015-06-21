@@ -55,13 +55,11 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
         }else if(strstr($startTimeNode_value, 'from now')){
             $start_time = $now_time + $diff;
         }
-        $d1 = date('d-m-Y', $start_time);
-        $d2 = date('d-m', $start_time);
+        $date = date('d-m-Y', $start_time);
         $match_page = Html::get($match_absolute_url);
         if(!$match_page)return null;
         $match_start_time = $match_page->find('.box-shiny-alt')[0]->find('.half')[2]->plaintext;
-        $f_date = trim($d1 . " " . $match_start_time);
-        $s_date = trim($d2 . " " . $match_start_time);
+        $f_date = trim($date . " " . $match_start_time);
         $stamp = StringHelper::mk_time_cet(true, $f_date);
         return $stamp;
     }
