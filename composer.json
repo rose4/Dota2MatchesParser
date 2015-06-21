@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Parser\\": "vendor/parser/src"
+    }
+  },
+  "require": {
+    "rdir/simple-html-dom": "^1.5"
+  }
+}

@@ -1,0 +1,55 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "907618d18dfd4cef81018dfcf05099bc",
+    "packages": [
+        {
+            "name": "rdir/simple-html-dom",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RedirectToolkit/simple-html-dom.git",
+                "reference": "df71e61564568e2397724a14849071321365e9ed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/RedirectToolkit/simple-html-dom/zipball/df71e61564568e2397724a14849071321365e9ed",
+                "reference": "df71e61564568e2397724a14849071321365e9ed",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "simple_html_dom.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "S.C. Chen",
+                    "email": "me578022@gmail.com"
+                },
+                {
+                    "name": "Emanuele Minotto",
+                    "email": "minottoemanuele@gmail.com"
+                }
+            ],
+            "description": "PHP Simple HTML DOM Parser",
+            "time": "2015-06-07 21:24:20"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
