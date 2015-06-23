@@ -2,7 +2,8 @@
 
 namespace Gurzhii\D2Parser;
 
-class Match {
+class Match
+{
     public $event;
     public $team1;
     public $team2;

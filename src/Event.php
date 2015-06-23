@@ -2,13 +2,13 @@
 
 namespace Gurzhii\D2Parser;
 
-class Event {
+class Event
+{
     public $title;
 
     public function __construct($data = [])
     {
-        foreach($data as $k=>$v)
-        {
+        foreach ($data as $k => $v) {
             $this->$k = $v;
         }
     }

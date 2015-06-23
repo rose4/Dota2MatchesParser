@@ -2,6 +2,7 @@
 
 namespace Gurzhii\D2Parser\Outputs;
 
-interface OutputInterface {
+interface OutputInterface
+{
     public function output();
 }

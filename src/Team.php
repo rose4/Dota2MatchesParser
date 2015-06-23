@@ -2,7 +2,8 @@
 
 namespace Gurzhii\D2Parser;
 
-class Team {
+class Team
+{
     public $percent;
     public $picture;
     public $title;
@@ -10,8 +11,7 @@ class Team {
 
     public function __construct($data = [])
     {
-        foreach($data as $k=>$v)
-        {
+        foreach ($data as $k => $v) {
             $this->$k = $v;
         }
         $this->slug = $this->setSlug();

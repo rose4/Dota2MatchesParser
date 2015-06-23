@@ -10,21 +10,19 @@ use Gurzhii\D2Parser\Html;
 use Gurzhii\D2Parser\Match;
 use Gurzhii\D2Parser\Team;
 
-class D2LoungeParser extends BaseParser implements ParserInterface {
+class D2LoungeParser extends BaseParser implements ParserInterface
+{
 
     public static $url = 'http://dota2lounge.com/';
 
     public function getStructuredDataSet()
     {
         $matchList = isset($this->html->find('#bets')[0]) ? $this->html->find('#bets')[0] : null;
-        if($matchList)
-        {
+        if ($matchList) {
             $matchesList = $matchList->find('.matchmain');
-            if(sizeof($matchesList))
-            {
-                foreach($matchesList as $matchEl)
-                {
-                    $absolute_url =  $this->getAbsoluteUrl($matchEl);
+            if (sizeof($matchesList)) {
+                foreach ($matchesList as $matchEl) {
+                    $absolute_url = $this->getAbsoluteUrl($matchEl);
                     $title1 = $matchEl->find('.teamtext')[0]->find('b')[0]->plaintext;
                     $title2 = $matchEl->find('.teamtext')[1]->find('b')[0]->plaintext;
                     $match = new Match(
@@ -56,11 +54,10 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
 
     public function getStatus($matchEl, $team1_title, $team2_title)
     {
-        if(
+        if (
             strstr(strtolower($team1_title), 'tbd') ||
             strstr(strtolower($team2_title), 'tbd')
-        )
-        {
+        ) {
             $status = self::PARSER_SKIP;
             return $status;
         }
@@ -70,16 +67,11 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
         $start_time_text = $matchEl->find('div.whenm')[0]->innertext;
 
         $e = $matchEl->find('.match');
-        if(strstr($e[0]->class, 'notavailable'))
-        {
-            if(!count($matchEl->find('.team')[0]->children()))
-            {
-                if(!count($matchEl->find('.team')[1]->children()))
-                {
-                    if(strstr($start_time_text, 'ago'))
-                    {
-                        if($isPostponed != self::MATCH_STATUS_POSTPONED)
-                        {
+        if (strstr($e[0]->class, 'notavailable')) {
+            if (!count($matchEl->find('.team')[0]->children())) {
+                if (!count($matchEl->find('.team')[1]->children())) {
+                    if (strstr($start_time_text, 'ago')) {
+                        if ($isPostponed != self::MATCH_STATUS_POSTPONED) {
                             $status = self::MATCH_STATUS_DRAW;
                         }
                     }
@@ -87,40 +79,26 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
             }
         }
 
-        if(count($matchEl->find('.team')[0]->children()))
-        {
+        if (count($matchEl->find('.team')[0]->children())) {
             $status = self::MATCH_STATUS_WIN_T1;
         }
-        if(count($matchEl->find('.team')[1]->children()))
-        {
+        if (count($matchEl->find('.team')[1]->children())) {
             $status = self::MATCH_STATUS_WIN_T2;
         }
-        if(strstr($start_time_text, 'LIVE'))
-        {
+        if (strstr($start_time_text, 'LIVE')) {
             $status = self::MATCH_STATUS_PLAYING;
         }
-        if($isPostponed == self::MATCH_POSTPONED)
-        {
+        if ($isPostponed == self::MATCH_POSTPONED) {
             $status = self::MATCH_STATUS_POSTPONED;
-        }
-        else if(strstr($isPostponed, 'TBD'))
-        {
+        } else if (strstr($isPostponed, 'TBD')) {
             $status = self::PARSER_SKIP;
-        }
-        else if($isPostponed == 'wrong team')
-        {
+        } else if ($isPostponed == 'wrong team') {
             $status = self::MATCH_STATUS_CANCELED;
-        }
-        else if($isPostponed == 'wrong match')
-        {
+        } else if ($isPostponed == 'wrong match') {
             $status = self::MATCH_STATUS_CANCELED;
-        }
-        else if($isPostponed == 'forfeit')
-        {
+        } else if ($isPostponed == 'forfeit') {
             $status = self::MATCH_STATUS_CANCELED;
-        }
-        else if($isPostponed == 'defwin')
-        {
+        } else if ($isPostponed == 'defwin') {
             $status = self::MATCH_STATUS_CANCELED;
         }
         return $status;
@@ -130,16 +108,16 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
     {
         $now_time = StringHelper::mk_time_cet();
         $startTimeNode_value = $matchEl->find('div.whenm')[0]->innertext;
-        $startTimeString = trim(preg_replace('#<(' . implode( '|', ['span', 'b', 'em']) . ')(?:[^>]+)?>.*?</\1>#s', '', $startTimeNode_value));
+        $startTimeString = trim(preg_replace('#<(' . implode('|', ['span', 'b', 'em']) . ')(?:[^>]+)?>.*?</\1>#s', '', $startTimeNode_value));
         $diff = $this->convertTextTimeToS($startTimeString);
-        if(strstr($startTimeNode_value, 'ago')){
+        if (strstr($startTimeNode_value, 'ago')) {
             $start_time = $now_time - $diff;
-        }else if(strstr($startTimeNode_value, 'from now')){
+        } else if (strstr($startTimeNode_value, 'from now')) {
             $start_time = $now_time + $diff;
         }
         $date = date('d-m-Y', $start_time);
         $match_page = Html::get($match_absolute_url);
-        if(!$match_page)return null;
+        if (!$match_page) return null;
         $match_start_time = $match_page->find('.box-shiny-alt')[0]->find('.half')[2]->plaintext;
         $f_date = trim($date . " " . $match_start_time);
         $stamp = StringHelper::mk_time_cet(true, $f_date);
@@ -149,13 +127,13 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
     private function convertTextTimeToS($textTime)
     {
         $seconds = 0;
-        if(strstr($textTime, 'hours') || strstr($textTime, 'hour')){
+        if (strstr($textTime, 'hours') || strstr($textTime, 'hour')) {
             $h_total = filter_var($textTime, FILTER_SANITIZE_NUMBER_INT);
             $seconds = $h_total * (60 * 60);
-        }else if(strstr($textTime, 'minute') || strstr($textTime, 'minutes')){
+        } else if (strstr($textTime, 'minute') || strstr($textTime, 'minutes')) {
             $m_total = filter_var($textTime, FILTER_SANITIZE_NUMBER_INT);
             $seconds = $m_total * (60);
-        }else if(strstr($textTime, 'day') || strstr($textTime, 'days')){
+        } else if (strstr($textTime, 'day') || strstr($textTime, 'days')) {
             $d_total = filter_var($textTime, FILTER_SANITIZE_NUMBER_INT);
             $seconds = (60 * 60 * 24) * $d_total;
         }

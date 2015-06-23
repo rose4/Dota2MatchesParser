@@ -4,7 +4,8 @@ namespace Gurzhii\D2Parser\Parsers;
 
 use Gurzhii\D2Parser\Html;
 
-class BaseParser {
+class BaseParser
+{
 
     const MATCH_STATUS_DEFAULT = self::MATCH_STATUS_FUTURE;
 
@@ -25,10 +26,11 @@ class BaseParser {
 
     public $html;
     public $matches;
+
     public function __construct()
     {
         $html = Html::get(static::$url);
-        if(!$html)throw new \Exception('no html data');
+        if (!$html) throw new \Exception('no html data');
         $this->html = new \simple_html_dom($html);
     }
 
