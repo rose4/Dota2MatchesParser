@@ -1,6 +1,6 @@
 <?php
 
-namespace Gurzhii\Parser;
+namespace Gurzhii\D2Parser;
 
 class Match {
     public $event;
@@ -10,8 +10,9 @@ class Match {
     public $original_id;
     public $start_time_stamp;
     public $stream_html;
+    public $status;
 
-    public function __construct(Event $event, Team $team1, Team $team2, $full_url, $original_id, $start_time_stamp)
+    public function __construct(Event $event, Team $team1, Team $team2, $full_url, $original_id, $start_time_stamp, $status)
     {
         $this->event = $event;
         $this->team1 = $team1;
@@ -19,6 +20,7 @@ class Match {
         $this->full_url = $full_url;
         $this->original_id = $original_id;
         $this->start_time_stamp = $start_time_stamp;
+        $this->status = $status;
     }
 
 }

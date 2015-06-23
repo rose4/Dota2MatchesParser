@@ -1,6 +1,6 @@
 <?php
 
-namespace Gurzhii\Parser;
+namespace Gurzhii\D2Parser;
 
 class Event {
     public $title;

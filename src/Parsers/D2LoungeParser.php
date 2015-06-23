@@ -1,6 +1,14 @@
 <?php
 
-namespace Gurzhii\Parser;
+namespace Gurzhii\D2Parser\Parsers;
+
+use Gurzhii\D2Parser\Interfaces\ParserInterface;
+
+use Gurzhii\D2Parser\StringHelper;
+use Gurzhii\D2Parser\Event;
+use Gurzhii\D2Parser\Html;
+use Gurzhii\D2Parser\Match;
+use Gurzhii\D2Parser\Team;
 
 class D2LoungeParser extends BaseParser implements ParserInterface {
 
@@ -17,23 +25,26 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
                 foreach($matchesList as $matchEl)
                 {
                     $absolute_url =  $this->getAbsoluteUrl($matchEl);
+                    $title1 = $matchEl->find('.teamtext')[0]->find('b')[0]->plaintext;
+                    $title2 = $matchEl->find('.teamtext')[1]->find('b')[0]->plaintext;
                     $match = new Match(
                         new Event(['title' => $matchEl->find('div.eventm')[0]->plaintext]),
                         new Team([
-                            'title' => $matchEl->find('.teamtext')[0]->find('b')[0]->plaintext,
+                            'title' => $title1,
                             'picture' => $this->getPicture($matchEl, 0),
                             'slug' => '',
                             'percent' => $this->getPercent($matchEl, 0)
                         ]),
                         new Team([
-                            'title' => $matchEl->find('.teamtext')[1]->find('b')[0]->plaintext,
+                            'title' => $title2,
                             'picture' => $this->getPicture($matchEl, 1),
                             'slug' => '',
                             'percent' => $this->getPercent($matchEl, 1)
                         ]),
                         $absolute_url,
                         $this->getOriginalId($absolute_url),
-                        $this->getStartTimeStamp($matchEl, $absolute_url)
+                        $this->getStartTimeStamp($matchEl, $absolute_url),
+                        $this->getStatus($matchEl, $title1, $title2)
                     );
                     $this->matches[] = $match;
                 }
@@ -41,6 +52,78 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
             }
         }
         return $this->matches;
+    }
+
+    public function getStatus($matchEl, $team1_title, $team2_title)
+    {
+        if(
+            strstr(strtolower($team1_title), 'tbd') ||
+            strstr(strtolower($team2_title), 'tbd')
+        )
+        {
+            $status = self::PARSER_SKIP;
+            return $status;
+        }
+        $status = $this->getInitialStatus();
+
+        $isPostponed = trim($matchEl->find('div.whenm span')[0]->plaintext);
+        $start_time_text = $matchEl->find('div.whenm')[0]->innertext;
+
+        $e = $matchEl->find('.match');
+        if(strstr($e[0]->class, 'notavailable'))
+        {
+            if(!count($matchEl->find('.team')[0]->children()))
+            {
+                if(!count($matchEl->find('.team')[1]->children()))
+                {
+                    if(strstr($start_time_text, 'ago'))
+                    {
+                        if($isPostponed != self::MATCH_STATUS_POSTPONED)
+                        {
+                            $status = self::MATCH_STATUS_DRAW;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(count($matchEl->find('.team')[0]->children()))
+        {
+            $status = self::MATCH_STATUS_WIN_T1;
+        }
+        if(count($matchEl->find('.team')[1]->children()))
+        {
+            $status = self::MATCH_STATUS_WIN_T2;
+        }
+        if(strstr($start_time_text, 'LIVE'))
+        {
+            $status = self::MATCH_STATUS_PLAYING;
+        }
+        if($isPostponed == self::MATCH_POSTPONED)
+        {
+            $status = self::MATCH_STATUS_POSTPONED;
+        }
+        else if(strstr($isPostponed, 'TBD'))
+        {
+            $status = self::PARSER_SKIP;
+        }
+        else if($isPostponed == 'wrong team')
+        {
+            $status = self::MATCH_STATUS_CANCELED;
+        }
+        else if($isPostponed == 'wrong match')
+        {
+            $status = self::MATCH_STATUS_CANCELED;
+        }
+        else if($isPostponed == 'forfeit')
+        {
+            $status = self::MATCH_STATUS_CANCELED;
+        }
+        else if($isPostponed == 'defwin')
+        {
+            $status = self::MATCH_STATUS_CANCELED;
+        }
+        return $status;
     }
 
     private function getStartTimeStamp($matchEl, $match_absolute_url = '')
@@ -85,7 +168,7 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
 
     private function getAbsoluteUrl($matchEl)
     {
-        return self::$url . $matchEl->find('div.matchleft a')[0]->href;
+        return static::$url . $matchEl->find('div.matchleft a')[0]->href;
     }
 
     private function getPercent($matchEl, $team_number = 0)

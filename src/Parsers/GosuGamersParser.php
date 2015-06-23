@@ -1,6 +1,8 @@
 <?php
 
-namespace Gurzhii\Parser;
+namespace Gurzhii\D2Parser\Parsers;
+
+use Gurzhii\D2Parser\Interfaces\ParserInterface;
 
 class GosuGamersParser extends BaseParser implements ParserInterface{
 
