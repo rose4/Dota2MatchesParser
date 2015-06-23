@@ -148,6 +148,7 @@ class D2LoungeParser extends BaseParser implements ParserInterface {
 
     private function convertTextTimeToS($textTime)
     {
+        $seconds = 0;
         if(strstr($textTime, 'hours') || strstr($textTime, 'hour')){
             $h_total = filter_var($textTime, FILTER_SANITIZE_NUMBER_INT);
             $seconds = $h_total * (60 * 60);
